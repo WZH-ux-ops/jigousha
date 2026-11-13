@@ -1,0 +1,15 @@
+{
+  "name": "jigousha",
+  "version": "1.1.0",
+  "private": true,
+  "description": "鸡狗杀 · MyGO!!!!! × Ave Mujica 五人身份卡牌对战（同人二次创作）",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/sim.js 300"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}

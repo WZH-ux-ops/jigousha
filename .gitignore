@@ -1,0 +1,12 @@
+# 本地开发 / 大文件，不进仓库
+figs/
+test/
+tools/
+data/
+node_modules/
+*.zip
+*.log
+
+# 系统
+.DS_Store
+Thumbs.db

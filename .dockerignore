@@ -1,0 +1,11 @@
+figs/
+test/
+tools/
+data/
+node_modules/
+*.zip
+*.log
+.git/
+.gitignore
+README.md
+开始游戏.bat

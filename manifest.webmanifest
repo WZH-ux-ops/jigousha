@@ -1,0 +1,14 @@
+{
+ "name": "鸡狗杀 · MyGO!!!!! × Ave Mujica",
+ "short_name": "鸡狗杀",
+ "description": "五个人的卡牌对战 · 同人二次创作",
+ "start_url": "./index.html",
+ "display": "fullscreen",
+ "orientation": "landscape",
+ "background_color": "#050409",
+ "theme_color": "#0a0714",
+ "icons": [
+  { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+  { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+ ]
+}

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel=manifest href=manifest.webmanifest>
+<meta name=theme-color content=#0a0714>
+<meta name=apple-mobile-web-app-capable content=yes>
+<meta name=apple-mobile-web-app-status-bar-style content=black-translucent>
+<title>鸡狗杀 · MyGO!!!!! × Ave Mujica</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐔</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/campaign.css">
+</head>
+<body>
+  <div class="rotate-hint"><div class="rh-ico">▭</div><div>请把手机横过来游玩</div><div style="font-size:10px;opacity:.6">鸡狗杀 · 手机版</div></div>
+<div id="bg">
+  <div class="bg-glow bg-glow-a"></div>
+  <div class="bg-glow bg-glow-b"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-spot"></div>
+</div>
+
+<div id="app">
+
+  <!-- ============ 标题 ============ -->
+  <section id="screen-title" class="screen active">
+    <div class="title-inner">
+      <div class="title-bands">
+        <span class="band-tag band-mygo">MyGO!!!!!</span>
+        <span class="band-x">×</span>
+        <span class="band-tag band-mujica">Ave Mujica</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-jp">鶏 狗 殺</div>
+        <h1 class="logo-cn" data-text="鸡狗杀">鸡狗杀</h1>
+        <div class="logo-en">JIGOUSHA · CARD BATTLE</div>
+      </div>
+      <p class="title-desc">五个人，一张节目单，一场谁都不肯先退场的演出。</p>
+      <nav class="title-menu">
+        <button class="btn btn-main" data-act="classic">
+          <span class="btn-ico">♟</span><span class="btn-txt">经典模式</span>
+          <span class="btn-sub">你 + 4 名 AI</span>
+        </button>
+        <button class="btn btn-main btn-alt" data-act="online">
+          <span class="btn-ico">⚡</span><span class="btn-txt">联机对战</span>
+          <span class="btn-sub">5 人房间 · 好友同台</span>
+        </button>
+        <button class="btn btn-main btn-story" data-act="story">
+          <span class="btn-ico">✦</span><span class="btn-txt">剧情闯关</span>
+          <span class="btn-sub">迷子の並行世界 · 第一话</span>
+        </button>
+        <button class="btn btn-ghost" data-act="gallery">角色图鉴</button>
+        <button class="btn btn-ghost" data-act="rules">规则说明</button>
+        <button class="btn btn-ghost" data-act="account" id="btn-account">登录 / 注册</button>
+        <button class="btn btn-ghost" data-act="friends" id="btn-friends">好友</button>
+      </nav>
+      <div class="title-foot">
+        <span>同人二次创作 · 非官方作品 · 仅供娱乐</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 经典模式：身份 & 选角 ============ -->
+  <section id="screen-classic" class="screen">
+    <header class="page-head">
+      <button class="btn btn-back" data-act="home">← 返回</button>
+      <div class="page-title">经典模式<span>单人对战 4 名 AI</span></div>
+      <div class="page-step" id="classic-step">选择角色 · 身份随机</div>
+    </header>
+    <div class="page-body" id="classic-body"></div>
+    <footer class="page-foot" id="classic-foot"></footer>
+  </section>
+
+  <!-- ============ 联机 ============ -->
+  <section id="screen-online" class="screen">
+    <header class="page-head">
+      <button class="btn btn-back" data-act="home">← 返回</button>
+      <div class="page-title">联机对战<span>5 人房间 · 服务端权威</span></div>
+      <div class="page-step" id="online-step"></div>
+    </header>
+    <div class="page-body" id="online-body"></div>
+  </section>
+
+  <!-- ============ 剧情闯关：章节 ============ -->
+  <section id="screen-chapter" class="screen">
+    <header class="page-head">
+      <button class="btn btn-back" data-act="home">← 返回</button>
+      <div class="page-title">剧情闯关<span>迷子の並行世界</span></div>
+      <div class="page-step" id="chapter-step">第一话</div>
+    </header>
+    <div class="page-body chapter-body" id="chapter-body"></div>
+  </section>
+
+  <!-- ============ 剧情回顾 ============ -->
+  <section id="screen-recap" class="screen">
+    <header class="page-head">
+      <button class="btn btn-back" data-act="home">← 返回</button>
+      <div class="page-title">剧情回顾<span>已经读过的台词</span></div>
+      <div class="page-step" id="recap-step"></div>
+    </header>
+    <div class="page-body recap-body" id="recap-body"></div>
+  </section>
+
+  <!-- ============ 视觉小说 ============ -->
+  <section id="screen-story" class="screen vn">
+    <div class="vn-bg bg-classroom" id="vn-bg"></div>
+    <div class="vn-vignette"></div>
+    <div class="vn-sprites" id="vn-sprites"></div>
+    <div class="vn-top">
+      <div class="vn-chapter" id="vn-chapter">第一话 · 迷子の並行世界</div>
+      <div class="vn-tools">
+        <button class="btn-mini" id="vn-auto">自动</button>
+        <button class="btn-mini" id="vn-skip">跳过对话</button>
+        <button class="btn-mini" id="vn-exit">退出</button>
+      </div>
+    </div>
+    <div class="vn-bottom">
+      <div class="vn-box" id="vn-box">
+        <div class="vn-name" id="vn-name"></div>
+        <div class="vn-text" id="vn-text"></div>
+        <div class="vn-tip">点击继续 ▼</div>
+      </div>
+      <div class="vn-choices" id="vn-choices"></div>
+    </div>
+  </section>
+
+  <!-- ============ 闯关战斗 ============ -->
+  <section id="screen-duel" class="screen">
+    <div class="duel" id="duel-root"></div>
+  </section>
+
+  <!-- ============ 对局 ============ -->
+  <section id="screen-table" class="screen">
+    <header class="hud">
+      <div class="hud-left">
+        <span class="hud-logo">鸡狗杀</span>
+        <span class="hud-round" id="hud-round">第 1 轮</span>
+        <span class="hud-phase" id="hud-phase">准备</span>
+      </div>
+      <div class="hud-center">
+        <span class="hud-pile" title="牌堆">牌堆 <b id="hud-deck">0</b></span>
+        <span class="hud-pile" title="弃牌堆">弃牌 <b id="hud-discard">0</b></span>
+      </div>
+      <div class="hud-right">
+        <button class="icon-btn" id="btn-help" title="规则">?</button>
+        <button class="icon-btn" id="btn-log" title="战斗记录">☰</button>
+        <button class="icon-btn" id="btn-voice" title="角色语音">声</button>
+        <button class="icon-btn" id="btn-sound" title="音效">🔊</button>
+        <button class="icon-btn" id="btn-quit" title="退出">✕</button>
+      </div>
+    </header>
+
+    <div class="table" id="table">
+      <div class="table-felt"><div class="felt-mark">鶏狗殺</div></div>
+      <div class="piles">
+        <div class="deck-stack" id="deck-stack"><span>牌堆</span></div>
+        <div class="discard-pile" id="discard-zone"><span>弃牌</span></div>
+      </div>
+      <div class="center-stage">
+        <div class="played" id="played"></div>
+        <div class="phase-chip" id="phase-chip">准备阶段</div>
+      </div>
+      <div class="seats" id="seats"></div>
+      <svg class="aim-layer" id="aim-layer" aria-hidden="true">
+        <defs>
+          <filter id="aimGlow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="3.2" result="b" />
+            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+      </svg>
+      <div class="fx-layer" id="fx-layer"></div>
+      <div class="subtitle" id="subtitle"></div>
+    </div>
+
+    <div class="prompt-bar" id="prompt-bar"></div>
+
+    <footer class="my-area">
+      <div class="my-card" id="my-card"></div>
+      <div class="hand-wrap">
+        <div class="hand" id="hand"></div>
+      </div>
+      <div class="action-rail" id="action-rail"></div>
+    </footer>
+
+    <aside class="log-panel" id="log-panel">
+      <div class="log-head">战斗记录 <button class="icon-btn" id="log-close">✕</button></div>
+      <div class="log-list" id="log-list"></div>
+    </aside>
+  </section>
+
+</div>
+
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal" id="modal"></div>
+</div>
+
+<!-- 开局：身份抽取动画 -->
+<div class="intro" id="intro">
+  <div class="intro-inner">
+    <div class="intro-head">
+      <div class="intro-title">身 份 抽 取</div>
+      <div class="intro-sub">五张身份牌 · 随机分配 · 制作人公开</div>
+    </div>
+    <div class="intro-players" id="intro-players"></div>
+    <div class="intro-center">
+      <div class="intro-cards" id="intro-cards"></div>
+      <div class="intro-result" id="intro-result"></div>
+    </div>    <div class="intro-actions">
+      <button class="btn intro-skip" id="intro-skip">跳过</button>
+      <button class="btn btn-primary intro-go" id="intro-go">进入对局</button>
+    </div>
+  </div>
+</div>
+
+<!-- 发牌动画 -->
+<div class="deal-overlay" id="deal-overlay">
+  <div class="deal-layer" id="deal-layer"></div>
+  <div class="deal-banner" id="deal-banner">发 牌 中</div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- 背景音乐 -->
+<div class="music-dock" id="music-dock">
+  <button class="md-toggle" id="md-toggle" title="背景音乐">♪</button>
+  <div class="md-panel">
+    <div class="md-head">BGM <span id="md-mode"></span></div>
+    <div class="md-track" id="md-track">—</div>
+    <div class="md-row">
+      <button class="md-btn" id="md-prev" title="上一首">⏮</button>
+      <button class="md-btn md-play" id="md-play" title="播放 / 暂停">▶</button>
+      <button class="md-btn" id="md-next" title="下一首">⏭</button>
+      <input type="range" id="md-vol" min="0" max="100" value="50" title="音量">
+    </div>
+    <div class="md-hint" id="md-hint">放入 music/ 文件夹的歌曲会随机播放</div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="voice/manifest.js"></script>
+<script src="voice/subtitles.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/music.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/social.js"></script>
+<script src="js/app.js"></script>
+<script src="js/story.js"></script>
+<script src="js/campaign.js"></script>
+</body>
+</html>

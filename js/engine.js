@@ -1166,7 +1166,13 @@
     {
       g.phase = '购买';
       if (p.picks == null) p.picks = 8;
-      if (p.shopRound != null && p.shopRound !== g.round) p.picks += 3;
+      // 每次轮到你开商店都补充拨片（首回合已由全员采购给过，不重复）
+      if (p.gotBonus) {
+        p.picks += 3;
+        log(g, `${p.name} 补充了 3 点吉他拨片（${p.picks}）。`, 'muted');
+      } else {
+        p.gotBonus = true;
+      }
       p.shopRound = g.round;
       p.shoppedRound = g.round;
       g.shop = g.shop || {};

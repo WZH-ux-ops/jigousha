@@ -1095,3 +1095,4 @@ body.shopping .prompt-bar { display: none !important; }
 .sd-tip-name { font-size: 12px; color: var(--cc, var(--gold)); font-weight: 600; margin-bottom: 3px; }
 .sd-tip-desc { color: var(--ink-dim); }
 .sd-tip-flavor { margin-top: 4px; color: var(--ink-faint); font-size: 9.5px; font-style: italic; }
+.shop-soldout { padding: 18px 26px; font-size: 12px; color: var(--ink-faint); letter-spacing: 1px; }

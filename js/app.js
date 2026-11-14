@@ -1149,12 +1149,12 @@
     const items = view.shop || [];
     const isShop = view.pending && view.pending.seat === view.seat && view.pending.kind === 'shop';
     const isTurn = isShop; // 只有在购买阶段才显示商店
-    if (!items.length || !isTurn) { bar.classList.remove('on'); bar.innerHTML = ''; App.shopSig = null; document.body.classList.remove('shopping'); return; }
-    const sig = items.map(it => it.i + ':' + it.key + ':' + it.cost).join('|');
+    if (!isTurn || (!items.length && !isShop)) { bar.classList.remove('on'); bar.innerHTML = ''; App.shopSig = null; document.body.classList.remove('shopping'); return; }
+    const sig = items.map(it => it.i + ':' + it.key + ':' + it.cost).join('|') + '|' + isShop;
     const fresh = sig !== App.shopSig;
     App.shopSig = sig;
     bar.innerHTML = `<div class="shop-label">购买阶段 · 吉他拨片 <b>${view.mePicks || 0}</b>${isShop ? '<button class="shop-done" id="shop-done">开始出牌</button>' : ''}</div>
-      <div class="shop-cards">${items.map((it, n) => {
+      <div class="shop-cards">${items.length ? items.map((it, n) => {
         const d = D.CARDS[it.key];
         return `<button class="shop-card ${fresh ? 'deal' : ''}" data-i="${it.i}" style="--cc:${d.color};animation-delay:${n * 70}ms" title="${esc(d.desc)}">
           <span class="sc-cost">${it.cost}</span>
@@ -1162,7 +1162,7 @@
           <span class="sc-name">${esc(d.name)}</span>
           <span class="sc-short">${esc(D.CARD_SHORT[it.key] || '')}</span>
         </button>`;
-      }).join('')}</div>`;
+      }).join('') : '<div class="shop-soldout">商店已售罄 · 点「开始出牌」继续</div>'}</div>`;
     bar.classList.add('on');
     document.body.classList.toggle('shopping', isShop);
     bar.querySelectorAll('.shop-card').forEach(b => {

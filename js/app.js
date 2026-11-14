@@ -1153,12 +1153,13 @@
     const bar = $('#shop-bar');
     if (!bar) return;
     const items = view.shop || [];
-    const isTurn = view.pending && view.pending.seat === view.seat && view.pending.kind === 'play';
-    if (!items.length || !isTurn) { bar.classList.remove('on'); bar.innerHTML = ''; App.shopSig = null; return; }
+    const isShop = view.pending && view.pending.seat === view.seat && view.pending.kind === 'shop';
+    const isTurn = view.pending && view.pending.seat === view.seat && (view.pending.kind === 'play' || isShop);
+    if (!items.length || !isTurn) { bar.classList.remove('on'); bar.innerHTML = ''; App.shopSig = null; document.body.classList.remove('shopping'); return; }
     const sig = items.map(it => it.i + ':' + it.key + ':' + it.cost).join('|');
     const fresh = sig !== App.shopSig;
     App.shopSig = sig;
-    bar.innerHTML = `<div class="shop-label">拨片商店 <b>${view.mePicks || 0}</b></div>
+    bar.innerHTML = `<div class="shop-label">购买阶段 · 吉他拨片 <b>${view.mePicks || 0}</b>${isShop ? '<button class="shop-done" id="shop-done">开始出牌</button>' : ''}</div>
       <div class="shop-cards">${items.map((it, n) => {
         const d = D.CARDS[it.key];
         return `<button class="shop-card ${fresh ? 'deal' : ''}" data-i="${it.i}" style="--cc:${d.color};animation-delay:${n * 70}ms" title="${esc(d.desc)}">
@@ -1169,9 +1170,12 @@
         </button>`;
       }).join('')}</div>`;
     bar.classList.add('on');
+    document.body.classList.toggle('shopping', isShop);
     bar.querySelectorAll('.shop-card').forEach(b => {
       b.addEventListener('click', () => sendAction({ type: 'buy', index: +b.dataset.i }));
     });
+    const doneBtn = bar.querySelector('#shop-done');
+    if (doneBtn) doneBtn.addEventListener('click', () => sendAction({ type: 'done' }));
   }
 
   function renderMyCard(view) {

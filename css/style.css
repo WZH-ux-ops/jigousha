@@ -1040,3 +1040,7 @@ img { image-rendering: -webkit-optimize-contrast; }
   .sc-name { font-size: 10px; }
   .sc-short { display: none; }
 }
+.shop-done { margin-left: auto; padding: 5px 14px; border-radius: 999px; border: 1px solid rgba(255,209,102,.6); background: linear-gradient(90deg, #ff3d7f, #ff8fb6); color: #1a0710; font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: 1px; }
+.shop-done:hover { filter: brightness(1.1); }
+body.shopping .prompt-bar { display: none !important; }
+.shop-bar { bottom: 186px; }

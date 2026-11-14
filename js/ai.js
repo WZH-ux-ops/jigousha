@@ -356,6 +356,19 @@
     }
 
     switch (ask.kind) {
+      case 'shop': {
+        // 买得起、又觉得有用的就买，最多买到没牌可买
+        const items = (ask.shop || []);
+        let best = null;
+        for (let i = 0; i < items.length; i++) {
+          const it = items[i];
+          if (!it || (p.picks || 0) < it.cost) continue;
+          const v = cardValue({ key: it.key }, p) - it.cost * 6;
+          if (v > 30 && (!best || v > best.v)) best = { i, v };
+        }
+        if (best) return { type: 'buy', index: best.i };
+        return { type: 'done' };
+      }
       case 'play': {
         const opts = playActions(g, p).sort((a, b) => b.w - a.w);
         // 简单前瞻：低收益动作不强行做

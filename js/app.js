@@ -1417,6 +1417,18 @@
       <div class="played-label">${esc(p ? p.name : '')}${d.targets && d.targets.length ? ' → ' + d.targets.map(t => view.players[t] ? view.players[t].name : '').join('、') : ''}</div>
     </div>`;
     { const pl = document.getElementById('played'); if (pl) { pl.classList.remove('in'); void pl.offsetWidth; pl.classList.add('in'); } }
+    // 最近出牌记录（含 AI 对 AI），避免一闪而过看不清
+    App.playLog = App.playLog || [];
+    App.playLog.push({ seat: d.seat, key: d.card.key, name: name, icon: icon, targets: (d.targets || []).slice() });
+    if (App.playLog.length > 4) App.playLog.shift();
+    const logBox = $('#play-log');
+    if (logBox) {
+      logBox.innerHTML = App.playLog.map(x => {
+        const who = view.players[x.seat] ? view.players[x.seat].name : '';
+        const tt = x.targets.map(t => view.players[t] ? view.players[t].name : '').join('、');
+        return `<div class="pl-row"><span class="pl-who">${esc(who)}</span><span class="pl-card">${x.icon} ${esc(x.name)}</span>${tt ? `<span class="pl-to">→ ${esc(tt)}</span>` : ''}</div>`;
+      }).join('');
+    }
     if (d.targets && d.targets.length) {
       Aim.play(d.seat, d.targets, color);
     } else if (d.kind !== 'skill' && (d.card.key === 'live' || d.card.key === 'spotlight')) {

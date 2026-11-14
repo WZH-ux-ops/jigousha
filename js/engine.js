@@ -609,6 +609,7 @@
           cancelled = !cancelled;
           acted = true;
           log(g, `${q.name} 打出【反调】${cancelled ? '，抵消了效果' : '，重新生效'}。`, 'trick');
+          g.display = { card: { key: 'counter', name: '反调', suit: c.suit, rank: c.rank }, seat: q.seat, targets: [user.seat] };
           fx(g, 'trick', q.seat, '反调');
           break;
         }
@@ -668,6 +669,7 @@
     if (r.type === 'card') {
       const c = removeFromHand(t, r.cardId); toDiscard(g, c);
       log(g, `${t.name} 打出了【回避】。`, 'muted');
+      g.display = { card: { key: 'dodge', name: '回避', suit: c.suit, rank: c.rank }, seat: t.seat, targets: [user.seat] };
       fx(g, 'dodge', t.seat, '↷');
       const w = equipOf(user, 'weapon');
       if (w && w.key === 'drums' && allCards(t).length > 0) {
@@ -711,6 +713,7 @@
       if (r.type === 'card') {
         const c = removeFromHand(cur, r.cardId); toDiscard(g, c);
         log(g, `${cur.name} 接上了【微声】。`, 'muted');
+        g.display = { card: { key: 'slash', name: '微声', suit: c.suit, rank: c.rank }, seat: cur.seat, targets: [other.seat] };
         const tmp = cur; cur = other; other = tmp;
         continue;
       }

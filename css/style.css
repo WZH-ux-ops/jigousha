@@ -980,3 +980,7 @@ body.perf .modal, body.perf .md-panel { box-shadow: 0 10px 30px rgba(0,0,0,.6) !
 .sp-invite { margin-bottom: 4px; font-size: 11px; color: var(--gold); }
 .sp-chat-input { display: flex; gap: 6px; margin-top: 8px; }
 .sp-chat-input input { flex: 1; padding: 9px 11px; border-radius: 10px; border: 1px solid var(--line); background: rgba(0,0,0,.3); color: var(--ink); font-size: 13px; outline: none; }
+
+.sp-me { display: flex; align-items: center; gap: 8px; padding: 8px 10px; margin-bottom: 6px; border-radius: 10px; background: rgba(255,209,102,.08); border: 1px solid rgba(255,209,102,.22); font-size: 11px; color: var(--ink-dim); }
+.sp-me b { color: var(--gold); font-weight: 600; letter-spacing: .5px; }
+.sp-me .btn { margin-left: auto; }

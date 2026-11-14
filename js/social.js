@@ -49,14 +49,16 @@
   function render() {
     const b = document.getElementById('sp-body');
     if (!b) return;
+    const me = (window.JGSAuth && window.JGSAuth.user()) || null;
+    const myLine = me ? `<div class="sp-me">我的用户名 <b>${esc(me.name)}</b><button class="btn btn-mini" data-x="copy">复制</button></div>` : '';
     if (!data.friends.length && !data.requests.length) {
-      b.innerHTML = `<div class="sp-empty">还没有好友<br><span>输入对方的用户名，发一个好友请求</span></div>
-        <div class="sp-add"><input id="sp-name" placeholder="对方的用户名" maxlength="16"><button class="btn btn-primary" data-x="add">添加</button></div>`;
+      b.innerHTML = `${myLine}<div class="sp-empty">还没有好友<br><span>输入对方的用户名，发一个好友请求</span></div>
+        <div class="sp-add"><input id="sp-name" placeholder="对方的用户名（不是昵称）" maxlength="16"><button class="btn btn-primary" data-x="add">添加</button></div>`;
       bindAdd();
       return;
     }
-    b.innerHTML = `
-      <div class="sp-add"><input id="sp-name" placeholder="输入用户名添加" maxlength="16"><button class="btn" data-x="add">添加</button></div>
+    b.innerHTML = `${myLine}
+      <div class="sp-add"><input id="sp-name" placeholder="输入用户名添加（不是昵称）" maxlength="16"><button class="btn" data-x="add">添加</button></div>
       ${data.requests.length ? `<div class="sp-sec">好友请求</div>` + data.requests.map(r => `
         <div class="sp-row"><span class="sp-dot on"></span><span class="sp-name">${esc(r.nick)}</span>
           <button class="btn btn-mini" data-x="accept" data-n="${esc(r.name)}">同意</button>

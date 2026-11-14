@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
  *  鸡狗杀 · 游戏引擎
  *  规则内核：回合流程 / 卡牌结算 / 技能触发 / 身份胜负
  *  浏览器与 Node 共用（服务端权威，客户端只做投影渲染）
@@ -1150,7 +1150,7 @@
     if (p.shoppedRound !== g.round) {
       g.phase = '购买';
       if (p.picks == null) p.picks = 8;
-      if (p.shopRound != null && p.shopRound !== g.round) p.picks += 2;
+      if (p.shopRound != null && p.shopRound !== g.round) p.picks += 3;
       p.shopRound = g.round;
       p.shoppedRound = g.round;
       g.shop = g.shop || {};
@@ -1218,7 +1218,7 @@
   const SHOP_POOL = ['slash', 'dodge', 'matcha', 'inspire', 'dismantle', 'duet', 'counter', 'absent', 'guitar', 'bass', 'drums', 'earpiece', 'lightstick', 'capo', 'pedal', 'tune', 'retake', 'encore', 'swap', 'thunder'];
   const SHOP_COST = [2, 3, 4];
   const SHOP_SIZE = 5;
-  const SHOP_COST_TABLE = [2, 2, 2, 3, 3, 4]; // 便宜货多，偶尔出好货
+  const SHOP_COST_TABLE = [1, 1, 1, 2, 2, 3]; // 便宜货多，偶尔出好货
   function makeShop(g, p) {
     const pool = SHOP_POOL.slice();
     const items = [];
@@ -1238,7 +1238,7 @@
     if (p.picks == null) p.picks = 8;
     if (p.shopRound == null) p.shopRound = g.round;
     else if (p.shopRound !== g.round) {
-      p.picks += 2;
+      p.picks += 3;
       p.shopRound = g.round;
       log(g, `${p.name} 补充了 2 点吉他拨片（${p.picks}）。`, 'muted');
     }
@@ -1297,7 +1297,7 @@
     for (const p of g.players) {
       if (!p.alive) continue;
       if (p.picks == null) p.picks = 8;
-      if (p.shopRound != null && p.shopRound !== g.round) p.picks += 2;
+      if (p.shopRound != null && p.shopRound !== g.round) p.picks += 3;
       p.shopRound = g.round;
       p.shoppedRound = g.round;
       g.shop[p.seat] = makeShop(g, p);
@@ -1504,3 +1504,4 @@
     CARD_DEF: D.CARDS
   };
 });
+

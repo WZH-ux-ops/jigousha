@@ -1055,3 +1055,5 @@ body.shopping .prompt-bar { display: none !important; }
 @keyframes shopUp { 0% { opacity: 0; transform: translate(-50%, -50%) scale(.6); } 18% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); } 30% { transform: translate(-50%, -50%) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -70%) scale(.98); } }
 .shop-cards { flex-wrap: wrap; justify-content: center; max-width: 660px; }
 @media (max-width: 900px) { .shop-cards { max-width: 340px; } }
+#played.in .card { animation: playedIn .22s cubic-bezier(.2,.85,.3,1.1) both; }
+@keyframes playedIn { from { opacity: 0; transform: translateY(14px) scale(.9); } to { opacity: 1; transform: none; } }

@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
  *  鸡狗杀 · 客户端
  *  页面 / 大厅 / 选角 / 牌桌 / 交互 / 联机
  * ========================================================= */
@@ -610,8 +610,7 @@
   };
   LocalHost.prototype.schedule = function (ms) {
     clearTimeout(this.timer);
-    const wait = App.fast ? 0 : Voice.hold();   // 等这句台词说完再继续
-    this.timer = setTimeout(() => this.step(), ms + wait);
+    this.timer = setTimeout(() => this.step(), ms);
   };
   LocalHost.prototype.step = function () {
     const g = this.game;
@@ -622,22 +621,16 @@
     if (!ask) return;
     const p = g.g.players[ask.seat];
     if (p && p.isAI) {
-      const hold = App.fast ? 0 : Voice.hold();
-      if (hold > 80) {            // 台词还没说完，稍后再行动
-        clearTimeout(this.timer);
-        this.timer = setTimeout(() => this.step(), hold + 120);
-        return;
-      }
       let resp;
       try { resp = AI.respond(g, ask); } catch (err) { console.error(err); resp = { type: 'pass' }; }
       g.act(resp);
-      this.schedule(App.fast ? 25 : (ask.kind === 'play' ? 700 : 420));
+      this.schedule(App.fast ? 25 : (ask.kind === 'play' ? 520 : 320));
     }
   };
   LocalHost.prototype.act = function (resp) {
     if (!this.game) return;
     this.game.act(resp);
-    this.schedule(App.fast ? 25 : 380);
+    this.schedule(App.fast ? 25 : 140);
   };
   LocalHost.prototype.quit = function () { clearTimeout(this.timer); this.game = null; };
 
@@ -1415,6 +1408,7 @@
     }
     const p = view.players[d.seat];
     $('#played').innerHTML = `<div style="position:relative;display:flex;flex-direction:column;align-items:center">
+    const pl = document.getElementById('played'); if (pl) { pl.classList.remove('in'); void pl.offsetWidth; pl.classList.add('in'); }
       <div class="card big" style="--cc:${color}" title="${esc(name)}：${esc(desc)}">
         <div class="c-art">${icon}</div>
         <div class="c-name">${name}</div>

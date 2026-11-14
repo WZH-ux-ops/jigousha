@@ -25,7 +25,7 @@
       guitar: 55, bass: 60, drums: 52, earpiece: 48, lightstick: 56, bike: 30, tourbus: 34,
       capo: 58, pedal: 62, tune: 80, retake: 40,
       pick_rain: 58, pick_trade: 44, pick_storm: 64, pick_salvage: 34,
-      pickguitar: 62, pickbox: 58, pickbelt: 56
+      pickguitar: 62, pickbox: 58, pickbelt: 56, togawa: 68
     };
     return v[c.key] != null ? v[c.key] : 20;
   }
@@ -177,6 +177,7 @@
     }
 
     for (const c of has('tune')) opts.push({ w: 86, a: { type: 'card', cardId: c.uid, targets: [] } });
+    for (const c of has('togawa')) opts.push({ w: 70, a: { type: 'card', cardId: c.uid, targets: [] } });
     if (has('retake').length && g.discard.some(c => c.key === 'slash' || c.key === 'dodge')) {
       opts.push({ w: 52, a: { type: 'card', cardId: has('retake')[0].uid, targets: [] } });
     }

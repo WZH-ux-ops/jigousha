@@ -1593,6 +1593,21 @@
       else if (f.kind === 'turn') beep('turn');
       else if (f.kind === 'danger' || f.kind === 'death') beep('dmg');
 
+      // 丰川集团：金色升级动画
+      if (f.kind === 'trick' && f.text === '丰川集团') {
+        JGSFx.flash('rgba(255,209,102,.22)');
+        const seatEl = document.querySelector(`.seat[data-seat="${f.seat}"]`) || document.querySelector('.my-card');
+        if (seatEl) {
+          const r = seatEl.getBoundingClientRect();
+          JGSFx.burst(r.left + r.width / 2, r.top + r.height / 2, { color: '#ffd166', count: 30, spread: 110 });
+          JGSFx.burst(r.left + r.width / 2, r.top + r.height / 2, { color: '#fff6d8', count: 12, spread: 60, up: true });
+        }
+        const up = document.createElement('div');
+        up.className = 'shop-up';
+        up.innerHTML = '<span>◆</span> 商店升级 · 6 张';
+        document.body.appendChild(up);
+        setTimeout(() => up.remove(), 1800);
+      }
       // 粒子 / 震屏
       if (f.kind === 'damage' || f.kind === 'danger' || f.kind === 'heal' || f.kind === 'death') {
         const target = f.seat === view.seat ? (document.querySelector('.my-card') || $(`#my-card`)) : document.querySelector(`.seat[data-seat="${f.seat}"]`);

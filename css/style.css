@@ -1047,3 +1047,11 @@ body.shopping .prompt-bar { display: none !important; }
 .pick-count { display: inline-flex; align-items: center; gap: 2px; padding: 1px 6px; border-radius: 5px; font-size: 9px; color: var(--gold); background: rgba(255,209,102,.1); border: 1px solid rgba(255,209,102,.28); }
 .pick-count b { font-size: 10px; }
 .pick-num { color: var(--gold); }
+.shop-up { position: fixed; left: 50%; top: 38%; transform: translate(-50%, -50%); z-index: 9996; pointer-events: none;
+  padding: 10px 22px; border-radius: 999px; font-family: var(--serif); font-size: 18px; letter-spacing: 4px; color: #1a1206;
+  background: linear-gradient(100deg, #ffd166, #fff6d8, #ffd166); box-shadow: 0 0 40px rgba(255,209,102,.8), 0 10px 30px rgba(0,0,0,.5);
+  animation: shopUp 1.8s cubic-bezier(.2,.8,.3,1) both; }
+.shop-up span { opacity: .8; }
+@keyframes shopUp { 0% { opacity: 0; transform: translate(-50%, -50%) scale(.6); } 18% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); } 30% { transform: translate(-50%, -50%) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -70%) scale(.98); } }
+.shop-cards { flex-wrap: wrap; justify-content: center; max-width: 660px; }
+@media (max-width: 900px) { .shop-cards { max-width: 340px; } }

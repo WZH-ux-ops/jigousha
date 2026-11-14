@@ -200,6 +200,10 @@
       key: 'pick_salvage', name: '回收', type: 'trick', icon: '♻', color: '#9dffc4',
       desc: '出牌阶段，失去 1 点体力，获得 3 点吉他拨片。', flavor: '「まだ使える。」'
     },
+    togawa: {
+      key: 'togawa', name: '丰川集团', type: 'trick', icon: '🏢', color: '#ffd166',
+      desc: '出牌阶段，升级你的商店：此后每回合的随机卡牌从 5 张变成 6 张（可叠加）。', flavor: '「投資の話をしましょう。」'
+    },
     bass: {
       key: 'bass', name: '贝斯', type: 'equip', sub: 'weapon', icon: '🎻', color: '#6fd3c7',
       range: 3, desc: '武器 · 攻击范围 3。你使用【微声】造成伤害后，摸一张牌。',
@@ -258,7 +262,7 @@
     ['encore', 2], ['swap', 2], ['thunder', 3], ['tune', 3], ['retake', 2],
     ['capo', 2], ['pedal', 2],
     ['pick_rain', 2], ['pick_trade', 2], ['pick_storm', 2], ['pick_salvage', 2],
-    ['pickguitar', 1], ['pickbox', 1], ['pickbelt', 1],
+    ['pickguitar', 1], ['pickbox', 1], ['pickbelt', 1], ['togawa', 2],
     ['guitar', 2], ['bass', 2], ['drums', 2], ['earpiece', 2], ['lightstick', 2],
     ['bike', 2], ['tourbus', 2]
   ];
@@ -448,6 +452,7 @@
     pickguitar: '武器3，商店-1',
     pickbox: '回合开始+1拨片',
     pickbelt: '商店费用-1',
+    togawa: '商店+1张',
     swap: '随机交换手牌',
     thunder: '1雷伤，无手牌则2',
     guitar: '攻击范围4',

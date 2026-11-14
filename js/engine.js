@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
  *  鸡狗杀 · 游戏引擎
  *  规则内核：回合流程 / 卡牌结算 / 技能触发 / 身份胜负
  *  浏览器与 Node 共用（服务端权威，客户端只做投影渲染）
@@ -545,6 +545,8 @@
         return others.length ? others.map(q => q.seat) : null;
       case 'pick_rain': case 'pick_salvage':
         return [];
+      case 'togawa':
+        return [];
       case 'pick_trade':
         return (p.picks || 0) >= 2 ? [] : null;
       case 'pick_storm': {
@@ -852,6 +854,12 @@
         p.picks = (p.picks || 0) + 3;
         fx(g, 'damage', p.seat, '-1');
         if (p.hp <= 0) yield* dying(g, p, null);
+        break;
+      }
+      case 'togawa': {
+        p.shopBonus = (p.shopBonus || 0) + 1;
+        log(g, `${p.name} 使用了【丰川集团】，商店升级为 ${SHOP_SIZE + p.shopBonus} 张。`, 'card');
+        fx(g, 'trick', p.seat, '丰川集团');
         break;
       }
       case 'camp': {
@@ -1211,7 +1219,7 @@
     const pool = SHOP_POOL.slice();
     const items = [];
     const disc = (hasEquip(p, 'pickguitar') || hasEquip(p, 'pickbelt') || hasSkill(p, 'pickinstinct')) ? 1 : 0;
-    for (let i = 0; i < SHOP_SIZE; i++) {
+    for (let i = 0; i < SHOP_SIZE + (p.shopBonus || 0); i++) {
       const idx = Math.floor(g.rng() * pool.length);
       const key = pool.splice(idx, 1)[0];
       if (!key) break;

@@ -1057,3 +1057,33 @@ body.shopping .prompt-bar { display: none !important; }
 @media (max-width: 900px) { .shop-cards { max-width: 340px; } }
 #played.in .card { animation: playedIn .22s cubic-bezier(.2,.85,.3,1.1) both; }
 @keyframes playedIn { from { opacity: 0; transform: translateY(14px) scale(.9); } to { opacity: 1; transform: none; } }
+/* ---------------- 角色信息面板 ---------------- */
+.seat-detail { position: fixed; inset: 0; z-index: 140; display: none; align-items: center; justify-content: center; background: rgba(4,3,8,.7); }
+.seat-detail.on { display: flex; }
+.sd-box { position: relative; width: min(440px, 92vw); max-height: 80vh; overflow-y: auto; padding: 18px 18px 16px; border-radius: 16px;
+  background: linear-gradient(165deg, #1b1430, #0c0916); border: 1px solid var(--line-strong); box-shadow: 0 24px 70px rgba(0,0,0,.75); }
+.sd-x { position: absolute; top: 10px; right: 12px; background: none; border: none; color: var(--ink-faint); font-size: 14px; cursor: pointer; }
+.sd-head { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+.sd-ava { width: 62px; height: 62px; border-radius: 12px; overflow: hidden; flex: 0 0 62px; background: #120d1d; }
+.sd-ava img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 8%; }
+.sd-name { font-family: var(--serif); font-size: 18px; letter-spacing: 2px; }
+.sd-sub { font-size: 10px; color: var(--ink-faint); letter-spacing: 1px; margin-top: 3px; }
+.sd-hp { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.sd-pips i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 3px; background: rgba(255,255,255,.14); }
+.sd-pips i.on { background: #ff4d6d; box-shadow: 0 0 6px rgba(255,77,109,.7); }
+.sd-hpnum { font-size: 11px; color: var(--ink-dim); }
+.sd-pick { font-size: 10px; color: var(--gold); border: 1px solid rgba(255,209,102,.35); border-radius: 999px; padding: 1px 7px; }
+.sd-sec { margin: 14px 0 7px; font-size: 10px; letter-spacing: 3px; color: var(--ink-faint); }
+.sd-equips { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.sd-eq { display: flex; align-items: center; gap: 6px; padding: 6px 9px; border-radius: 9px; border: 1px dashed var(--line); background: rgba(255,255,255,.02); }
+.sd-eq.has { border-style: solid; border-color: rgba(255,209,102,.4); background: rgba(255,209,102,.07); }
+.sd-eq-slot { font-size: 9px; color: var(--ink-faint); }
+.sd-eq-name { font-size: 11px; margin-left: auto; }
+.sd-skills { display: flex; flex-direction: column; gap: 7px; }
+.sd-skill { padding: 8px 10px; border-radius: 10px; background: rgba(255,255,255,.04); border: 1px solid var(--line); }
+.sd-sk-top { display: flex; align-items: baseline; gap: 6px; }
+.sd-sk-top b { font-size: 12px; }
+.sd-sk-top i { font-style: normal; font-size: 9px; color: var(--gold); opacity: .8; }
+.sd-skill p { margin: 4px 0 0; font-size: 10.5px; line-height: 1.55; color: var(--ink-dim); }
+.sd-foot { margin-top: 12px; font-size: 9.5px; color: var(--ink-faint); text-align: center; }
+.seat { cursor: pointer; }

@@ -1705,17 +1705,60 @@
 
   function onSeatClick(seat) {
     const view = App.view, pending = view.pending;
-    if (!pending || pending.seat !== view.seat) return;
-    if (pending.kind === 'chooseSeat' && (pending.seats || []).includes(seat)) {
-      sendAction({ type: 'seat', seat });
-      return;
+    if (pending && pending.seat === view.seat) {
+      if (pending.kind === 'chooseSeat' && (pending.seats || []).includes(seat)) {
+        sendAction({ type: 'seat', seat });
+        return;
+      }
+      if (App.sel && App.sel.targets.includes(seat)) {
+        const sel = App.sel;
+        App.sel = null;
+        if (sel.kind === 'card') sendAction({ type: 'card', cardId: sel.id, targets: [seat] });
+        else sendAction({ type: 'skill', skillId: sel.id, targets: [seat] });
+        return;
+      }
     }
-    if (App.sel && App.sel.targets.includes(seat)) {
-      const sel = App.sel;
-      App.sel = null;
-      if (sel.kind === 'card') sendAction({ type: 'card', cardId: sel.id, targets: [seat] });
-      else sendAction({ type: 'skill', skillId: sel.id, targets: [seat] });
-    }
+    // 非选目标时：查看对方信息（技能 / 装备 / 拨片，不显示手牌）
+    openSeatDetail(view, seat);
+  }
+
+  /* ---------------- 角色信息面板 ---------------- */
+  function openSeatDetail(view, seat) {
+    const p = view.players[seat];
+    if (!p) return;
+    const modal = $('#seat-detail');
+    if (!modal) return;
+    const ch = charOf(p);
+    const idn = p.identity ? D.IDENTITIES[p.identity] : null;
+    const eq = p.equips || {};
+    const slots = ['weapon', 'armor', 'offhorse', 'defhorse'];
+    const slotName = { weapon: '武器', armor: '防具', offhorse: '进攻坐骑', defhorse: '防御坐骑' };
+    const skills = (ch ? ch.skills : []).concat(idn && idn.skill ? [idn.skill] : []);
+    modal.innerHTML = `<div class="sd-box">
+      <button class="sd-x" data-x="close">✕</button>
+      <div class="sd-head">
+        <div class="sd-ava">${ch ? `<img src="${D.CHAR_IMG[ch.id]}" alt="">` : ''}</div>
+        <div class="sd-who">
+          <div class="sd-name">${esc(p.name)}</div>
+          <div class="sd-sub">${esc(ch ? ch.name : '')} · ${esc(ch ? ch.band : '')}${idn ? ' · ' + esc(idn.name) : ''}</div>
+          <div class="sd-hp"><span class="sd-pips">${Array.from({ length: p.maxHp }, (_, i) => `<i class="${i < p.hp ? 'on' : ''}"></i>`).join('')}</span><span class="sd-hpnum">${p.hp}/${p.maxHp}</span><span class="sd-pick">拨片 ${p.picks || 0}</span></div>
+        </div>
+      </div>
+      <div class="sd-sec">装 备</div>
+      <div class="sd-equips">${slots.map(s => {
+        const c = eq[s];
+        const d = c ? D.CARDS[c.key] : null;
+        return `<div class="sd-eq ${d ? 'has' : ''}"><span class="sd-eq-slot">${slotName[s]}</span><span class="sd-eq-name">${d ? esc(d.name) : '空'}</span></div>`;
+      }).join('')}</div>
+      <div class="sd-sec">技 能</div>
+      <div class="sd-skills">${skills.map(sk => `
+        <div class="sd-skill"><div class="sd-sk-top"><b>${esc(sk.name)}</b><i>${esc(sk.type || '')}</i></div>
+        <p>${esc(sk.desc || '')}</p></div>`).join('') || '<p class="sd-empty">无</p>'}</div>
+      <div class="sd-foot">手牌 ${p.handCount} 张 · 不显示具体手牌</div>
+    </div>`;
+    modal.classList.add('on');
+    modal.querySelector('[data-x=close]').addEventListener('click', () => modal.classList.remove('on'));
+    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('on'); }, { once: true });
   }
 
   function onSkillClick(id) {

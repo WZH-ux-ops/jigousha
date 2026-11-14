@@ -1155,7 +1155,7 @@
     if (!bar) return;
     const items = view.shop || [];
     const isShop = view.pending && view.pending.seat === view.seat && view.pending.kind === 'shop';
-    const isTurn = view.pending && view.pending.seat === view.seat && (view.pending.kind === 'play' || isShop);
+    const isTurn = isShop; // 只有在购买阶段才显示商店
     if (!items.length || !isTurn) { bar.classList.remove('on'); bar.innerHTML = ''; App.shopSig = null; document.body.classList.remove('shopping'); return; }
     const sig = items.map(it => it.i + ':' + it.key + ':' + it.cost).join('|');
     const fresh = sig !== App.shopSig;

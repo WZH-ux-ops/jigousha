@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
  *  鸡狗杀 · 游戏引擎
  *  规则内核：回合流程 / 卡牌结算 / 技能触发 / 身份胜负
  *  浏览器与 Node 共用（服务端权威，客户端只做投影渲染）
@@ -1240,13 +1240,6 @@
       const ask = { kind: 'play', prompt: '出牌阶段：使用一张牌 / 发动技能 / 购买卡牌 / 结束回合' };
       const r = yield* request(g, p.seat, ask, resp => {
         if (resp.type === 'end') return null;
-        if (resp.type === 'buy') {
-          const sh = g.shop[p.seat];
-          const it = sh && sh.items[resp.index];
-          if (!it) return '没有这个商品';
-          if (p.picks < it.cost) return '吉他拨片不够';
-          return null;
-        }
         if (resp.type === 'card') {
           const c = findInHand(p, resp.cardId);
           if (!c) return '牌不在手中';
@@ -1279,25 +1272,6 @@
         return '无效操作';
       });
       if (r.type === 'end') break;
-      if (r.type === 'buy') {
-        const sh = g.shop[p.seat];
-        const it = sh && sh.items[r.index];
-        if (it) {
-          p.picks -= it.cost;
-          const c = {
-            uid: 'c' + (++g.uid), key: it.key,
-            suit: D.SUITS[Math.floor(g.rng() * 4)],
-            rank: 1 + Math.floor(g.rng() * 13)
-          };
-          c.rankText = D.RANK_TEXT[c.rank];
-          p.hand.push(c);
-          sortHand(p);
-          sh.items[r.index] = null;
-          log(g, `${p.name} 用 ${it.cost} 点吉他拨片买下了【${D.CARDS[it.key].name}】（剩余 ${p.picks}）。`, 'card');
-          fx(g, 'trick', p.seat, '拨片');
-        }
-        continue;
-      }
       if (r.type === 'card') {
         yield* useCard(g, p, r.cardId, r.targets || []);
       } else if (r.type === 'skill') {

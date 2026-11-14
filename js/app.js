@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
  *  鸡狗杀 · 客户端
  *  页面 / 大厅 / 选角 / 牌桌 / 交互 / 联机
  * ========================================================= */
@@ -1408,7 +1408,6 @@
     }
     const p = view.players[d.seat];
     $('#played').innerHTML = `<div style="position:relative;display:flex;flex-direction:column;align-items:center">
-    const pl = document.getElementById('played'); if (pl) { pl.classList.remove('in'); void pl.offsetWidth; pl.classList.add('in'); }
       <div class="card big" style="--cc:${color}" title="${esc(name)}：${esc(desc)}">
         <div class="c-art">${icon}</div>
         <div class="c-name">${name}</div>
@@ -1417,6 +1416,7 @@
       </div>
       <div class="played-label">${esc(p ? p.name : '')}${d.targets && d.targets.length ? ' → ' + d.targets.map(t => view.players[t] ? view.players[t].name : '').join('、') : ''}</div>
     </div>`;
+    { const pl = document.getElementById('played'); if (pl) { pl.classList.remove('in'); void pl.offsetWidth; pl.classList.add('in'); } }
     if (d.targets && d.targets.length) {
       Aim.play(d.seat, d.targets, color);
     } else if (d.kind !== 'skill' && (d.card.key === 'live' || d.card.key === 'spotlight')) {

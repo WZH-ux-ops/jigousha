@@ -806,15 +806,19 @@
         const t = g.players[targets[0]];
         log(g, `${p.name} 对 ${t.name} 使用了【换幕】。`, 'card');
         const cancelled = yield* askCounter(g, p, card, t.seat);
-        if (!cancelled && p.hand.length && t.hand.length) {
-          const a = p.hand[Math.floor(Math.random() * p.hand.length)];
-          const b = t.hand[Math.floor(Math.random() * t.hand.length)];
-          p.hand.splice(p.hand.indexOf(a), 1);
-          t.hand.splice(t.hand.indexOf(b), 1);
-          p.hand.push(b);
-          t.hand.push(a);
-          log(g, `${p.name} 与 ${t.name} 交换了一张手牌。`, 'card');
-          fx(g, 'trick', t.seat, '换幕');
+        if (!cancelled) {
+          if (!p.hand.length || !t.hand.length) {
+            log(g, `【换幕】没有可交换的牌。`, 'muted');
+          } else {
+            const a = p.hand[Math.floor(Math.random() * p.hand.length)];
+            const b = t.hand[Math.floor(Math.random() * t.hand.length)];
+            p.hand.splice(p.hand.indexOf(a), 1);
+            t.hand.splice(t.hand.indexOf(b), 1);
+            p.hand.push(b);
+            t.hand.push(a);
+            log(g, `${p.name} 与 ${t.name} 交换了一张手牌（${D.CARDS[a.key].name} ↔ ${D.CARDS[b.key].name}）。`, 'card');
+            fx(g, 'trick', t.seat, '换幕');
+          }
         }
         break;
       }

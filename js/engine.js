@@ -1147,8 +1147,8 @@
     g.phase = '采购';
     // 摸牌阶段已被拨片商店取代：每回合刷新一次随机商品，不再自动摸牌
 
-    // 每回合：先采购，再出牌（开局那一轮已经全员采购过）
-    if (p.shoppedRound !== g.round) {
+    // 每回合：先采购，再出牌（轮到自己就一定先开商店）
+    {
       g.phase = '购买';
       if (p.picks == null) p.picks = 8;
       if (p.shopRound != null && p.shopRound !== g.round) p.picks += 3;

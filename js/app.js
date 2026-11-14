@@ -1150,23 +1150,26 @@
 
   /* ---------------- 吉他拨片商店 ---------------- */
   function renderShop(view) {
-    const box = $('#my-card');
-    if (!box) return;
+    const bar = $('#shop-bar');
+    if (!bar) return;
     const items = view.shop || [];
-    let el = box.querySelector('.shop-row');
     const isTurn = view.pending && view.pending.seat === view.seat && view.pending.kind === 'play';
-    if (!items.length || !isTurn) { if (el) el.remove(); return; }
-    if (!el) { el = document.createElement('div'); el.className = 'shop-row'; box.appendChild(el); }
-    el.innerHTML = `<div class="shop-head">吉他拨片 <b>${view.mePicks || 0}</b></div>
-      <div class="shop-list">${items.map(it => {
+    if (!items.length || !isTurn) { bar.classList.remove('on'); bar.innerHTML = ''; App.shopSig = null; return; }
+    const sig = items.map(it => it.i + ':' + it.key + ':' + it.cost).join('|');
+    const fresh = sig !== App.shopSig;
+    App.shopSig = sig;
+    bar.innerHTML = `<div class="shop-label">拨片商店 <b>${view.mePicks || 0}</b></div>
+      <div class="shop-cards">${items.map((it, n) => {
         const d = D.CARDS[it.key];
-        return `<button class="shop-item" data-i="${it.i}" title="${esc(d.desc)}">
-          <span class="si-ico" style="--cc:${d.color}">${d.icon}</span>
-          <span class="si-name">${esc(d.name)}</span>
-          <span class="si-cost">${it.cost}</span>
+        return `<button class="shop-card ${fresh ? 'deal' : ''}" data-i="${it.i}" style="--cc:${d.color};animation-delay:${n * 70}ms" title="${esc(d.desc)}">
+          <span class="sc-cost">${it.cost}</span>
+          <span class="sc-icon">${d.icon}</span>
+          <span class="sc-name">${esc(d.name)}</span>
+          <span class="sc-short">${esc(D.CARD_SHORT[it.key] || '')}</span>
         </button>`;
       }).join('')}</div>`;
-    el.querySelectorAll('.shop-item').forEach(b => {
+    bar.classList.add('on');
+    bar.querySelectorAll('.shop-card').forEach(b => {
       b.addEventListener('click', () => sendAction({ type: 'buy', index: +b.dataset.i }));
     });
   }

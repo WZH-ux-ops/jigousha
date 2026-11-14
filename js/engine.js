@@ -1166,15 +1166,18 @@
   /* ---------------- 吉他拨片商店 ---------------- */
   const SHOP_POOL = ['slash', 'dodge', 'matcha', 'inspire', 'dismantle', 'duet', 'counter', 'absent', 'guitar', 'bass', 'drums', 'earpiece', 'lightstick', 'capo', 'pedal', 'tune', 'retake', 'encore', 'swap', 'thunder'];
   const SHOP_COST = [2, 3, 4];
+  const SHOP_SIZE = 5;
+  const SHOP_COST_TABLE = [2, 2, 2, 3, 3, 4]; // 便宜货多，偶尔出好货
   function makeShop(g, p) {
     const pool = SHOP_POOL.slice();
     const items = [];
     const disc = (hasEquip(p, 'pickguitar') || hasEquip(p, 'pickbelt') || hasSkill(p, 'pickinstinct')) ? 1 : 0;
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < SHOP_SIZE; i++) {
       const idx = Math.floor(g.rng() * pool.length);
       const key = pool.splice(idx, 1)[0];
       if (!key) break;
-      items.push({ key, cost: Math.max(1, SHOP_COST[i] - disc) });
+      const base = SHOP_COST_TABLE[Math.floor(g.rng() * SHOP_COST_TABLE.length)];
+      items.push({ key, cost: Math.max(1, base - disc) });
     }
     return { round: g.round, items };
   }

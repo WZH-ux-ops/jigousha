@@ -1134,6 +1134,45 @@
     g.phase = '采购';
     // 摸牌阶段已被拨片商店取代：每回合刷新一次随机商品，不再自动摸牌
 
+    // 每回合：先采购，再出牌（开局那一轮已经全员采购过）
+    if (p.shoppedRound !== g.round) {
+      g.phase = '购买';
+      if (p.picks == null) p.picks = 8;
+      if (p.shopRound != null && p.shopRound !== g.round) p.picks += 2;
+      p.shopRound = g.round;
+      p.shoppedRound = g.round;
+      g.shop = g.shop || {};
+      g.shop[p.seat] = makeShop(g, p);
+      if (hasEquip(p, 'pickbox')) p.picks += 1;
+      if (hasSkill(p, 'pickfan')) p.picks += 1;
+      for (;;) {
+        const r = yield* request(g, p.seat, {
+          kind: 'shop', prompt: '购买阶段：用吉他拨片买牌，买完后进入出牌。',
+          picks: p.picks, shop: g.shop[p.seat].items
+        }, resp => {
+          if (resp.type === 'done' || resp.type === 'end') return null;
+          if (resp.type === 'buy') {
+            const it = g.shop[p.seat] && g.shop[p.seat].items[resp.index];
+            if (!it) return '没有这个商品';
+            if (p.picks < it.cost) return '吉他拨片不够';
+            return null;
+          }
+          return '无效操作';
+        });
+        if (r.type !== 'buy') break;
+        const it = g.shop[p.seat].items[r.index];
+        if (!it) break;
+        p.picks -= it.cost;
+        const c = { uid: 'c' + (++g.uid), key: it.key, suit: D.SUITS[Math.floor(g.rng() * 4)], rank: 1 + Math.floor(g.rng() * 13) };
+        c.rankText = D.RANK_TEXT[c.rank];
+        p.hand.push(c); sortHand(p);
+        g.shop[p.seat].items[r.index] = null;
+        log(g, `${p.name} 用 ${it.cost} 点吉他拨片买下了【${D.CARDS[it.key].name}】（剩余 ${p.picks}）。`, 'card');
+        fx(g, 'trick', p.seat, '拨片');
+      }
+      g.shop = {};
+    }
+
     g.phase = '出牌';
     if (p.tf.skipPlay) {
       log(g, `${p.name} 走神了，跳过出牌阶段。`, 'muted');
@@ -1248,6 +1287,7 @@
       if (p.picks == null) p.picks = 8;
       if (p.shopRound != null && p.shopRound !== g.round) p.picks += 2;
       p.shopRound = g.round;
+      p.shoppedRound = g.round;
       g.shop[p.seat] = makeShop(g, p);
       if (hasEquip(p, 'pickbox')) p.picks += 1;
       if (hasSkill(p, 'pickfan')) p.picks += 1;
@@ -1282,14 +1322,11 @@
 
   function* mainFlow(g) {
     let guard = 0;
+    yield* shopRound(g);
+    if (g.winner) return;
     while (!g.winner && guard++ < 4000) {
       const p = g.players[g.current];
       if (!p.alive) { g.current = nextAlive(g, g.current); continue; }
-      if (g.shopDoneRound !== g.round) {
-        g.shopDoneRound = g.round;
-        yield* shopRound(g);
-        if (g.winner) break;
-      }
       yield* turn(g, p);
       if (g.winner) break;
       g.current = nextAlive(g, g.current);

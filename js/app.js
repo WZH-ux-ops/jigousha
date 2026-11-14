@@ -1748,8 +1748,9 @@
       <div class="sd-equips">${slots.map(s => {
         const key = eq[s];
         const d = key ? D.CARDS[key] : null;
-        return `<div class="sd-eq ${d ? 'has' : ''}"><span class="sd-eq-slot">${slotName[s]}</span><span class="sd-eq-name">${d ? esc(d.name) : '空'}</span></div>`;
+        return `<div class="sd-eq ${d ? 'has' : ''}" ${d ? `data-key="${key}"` : ''}><span class="sd-eq-slot">${slotName[s]}</span><span class="sd-eq-name">${d ? esc(d.name) : '空'}</span></div>`;
       }).join('')}</div>
+      <div class="sd-eq-tip" id="sd-eq-tip"><span class="sd-eq-hint">点击已装备的卡牌查看详情</span></div>
       <div class="sd-sec">技 能</div>
       <div class="sd-skills">${skills.map(sk => `
         <div class="sd-skill"><div class="sd-sk-top"><b>${esc(sk.name)}</b><i>${esc(sk.type || '')}</i></div>
@@ -1759,6 +1760,18 @@
     modal.classList.add('on');
     modal.querySelector('[data-x=close]').addEventListener('click', () => modal.classList.remove('on'));
     modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('on'); }, { once: true });
+    modal.querySelectorAll('.sd-eq.has').forEach(el => {
+      el.addEventListener('click', () => {
+        const d = D.CARDS[el.dataset.key];
+        if (!d) return;
+        modal.querySelectorAll('.sd-eq').forEach(x => x.classList.remove('sel'));
+        el.classList.add('sel');
+        const tip = modal.querySelector('#sd-eq-tip');
+        if (tip) tip.innerHTML = `<div class="sd-tip-name" style="--cc:${d.color}">${d.icon} ${esc(d.name)}</div>
+          <div class="sd-tip-desc">${esc(d.desc)}</div>
+          ${d.flavor ? `<div class="sd-tip-flavor">${esc(d.flavor)}</div>` : ''}`;
+      });
+    });
   }
 
   function onSkillClick(id) {

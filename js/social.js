@@ -115,6 +115,13 @@
         await refresh();
       } else if (x === 'accept') { await api('/api/friends/accept', { method: 'POST', body: JSON.stringify({ name: n }) }); await refresh(); }
       else if (x === 'decline') { await api('/api/friends/decline', { method: 'POST', body: JSON.stringify({ name: n }) }); await refresh(); }
+      else if (x === 'copy') {
+        const me = (window.JGSAuth && window.JGSAuth.user()) || null;
+        if (me) {
+          try { await navigator.clipboard.writeText(me.name); toast('已复制用户名：' + me.name); }
+          catch (e) { prompt('你的用户名', me.name); }
+        }
+      }
       else if (x === 'chat') { chatWith = n; await refresh(); await loadChat(); }
       else if (x === 'closechat') { chatWith = null; chatMsgs = []; render(); }
       else if (x === 'send') {

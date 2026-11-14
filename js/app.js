@@ -624,7 +624,7 @@
       let resp;
       try { resp = AI.respond(g, ask); } catch (err) { console.error(err); resp = { type: 'pass' }; }
       g.act(resp);
-      this.schedule(App.fast ? 25 : (ask.kind === 'play' ? 520 : 320));
+      this.schedule(App.fast ? 25 : (ask.kind === 'play' ? 900 + Math.random() * 300 : 650 + Math.random() * 200));
     }
   };
   LocalHost.prototype.act = function (resp) {

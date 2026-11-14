@@ -1098,6 +1098,7 @@
         <div class="hp-row">${pips}<span class="hp-num">${p.hp}/${p.maxHp}</span></div>
         <div class="seat-stats">
           <span class="hand-count">手牌 <b>${p.handCount}</b></span>
+          <span class="pick-count" title="剩余吉他拨片">拨片 <b>${p.picks || 0}</b></span>
           ${p.identity ? `<span style="color:${idn.color};font-size:10px;letter-spacing:1px">${idn.name}</span>` : ''}
         </div>
         <div class="equip-row"><span class="eq-slots-mini">${eqMini}</span>${judges}</div>
@@ -1224,7 +1225,7 @@
           <span class="mc-idn">${idn.badge} ${idn.name}</span>
         </div>
       </div>
-      <div class="mc-hp"><div class="hp-row">${pips}<span class="hp-num">${p.hp}/${p.maxHp}</span><span class="hp-num" style="margin-left:auto">手牌上限 ${view.handLimit}</span></div></div>
+      <div class="mc-hp"><div class="hp-row">${pips}<span class="hp-num">${p.hp}/${p.maxHp}</span><span class="hp-num pick-num">拨片 ${view.mePicks || 0}</span><span class="hp-num" style="margin-left:auto">手牌上限 ${view.handLimit}</span></div></div>
       <div class="mc-block">
         <div class="mc-label">装 备 <span>点击查看</span></div>
         <div class="mc-equips">${eqRack}</div>

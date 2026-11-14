@@ -1354,6 +1354,7 @@
       band: D.getChar(p.charId).band,
       hp: Math.max(0, p.hp), maxHp: p.maxHp,
       handCount: p.hand.length,
+      picks: p.picks || 0,
       equips: summarizeEquips(p),
       judge: p.judge.map(c => ({ key: c.key, name: D.CARDS[c.key].name, icon: D.CARDS[c.key].icon })),
       identity: (p.revealed || p.seat === seat) ? p.identity : null,

@@ -1044,3 +1044,6 @@ img { image-rendering: -webkit-optimize-contrast; }
 .shop-done:hover { filter: brightness(1.1); }
 body.shopping .prompt-bar { display: none !important; }
 .shop-bar { bottom: 186px; }
+.pick-count { display: inline-flex; align-items: center; gap: 2px; padding: 1px 6px; border-radius: 5px; font-size: 9px; color: var(--gold); background: rgba(255,209,102,.1); border: 1px solid rgba(255,209,102,.28); }
+.pick-count b { font-size: 10px; }
+.pick-num { color: var(--gold); }

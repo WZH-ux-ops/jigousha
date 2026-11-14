@@ -23,7 +23,9 @@
       slash: 70, dodge: 62, counter: 64, inspire: 50,
       poach: 42, dismantle: 36, duet: 30, absent: 30, live: 26, spotlight: 26, camp: 22,
       guitar: 55, bass: 60, drums: 52, earpiece: 48, lightstick: 56, bike: 30, tourbus: 34,
-      capo: 58, pedal: 62, tune: 80, retake: 40
+      capo: 58, pedal: 62, tune: 80, retake: 40,
+      pick_rain: 58, pick_trade: 44, pick_storm: 64, pick_salvage: 34,
+      pickguitar: 62, pickbox: 58, pickbelt: 56
     };
     return v[c.key] != null ? v[c.key] : 20;
   }
@@ -357,14 +359,16 @@
 
     switch (ask.kind) {
       case 'shop': {
-        // 买得起、又觉得有用的就买，最多买到没牌可买
-        const items = (ask.shop || []);
+        // 手牌太多就不再买；否则优先补牌，再按性价比挑
+        if (p.hand.length >= 6) return { type: 'done' };
+        const items = ask.shop || [];
         let best = null;
         for (let i = 0; i < items.length; i++) {
           const it = items[i];
           if (!it || (p.picks || 0) < it.cost) continue;
-          const v = cardValue({ key: it.key }, p) - it.cost * 6;
-          if (v > 30 && (!best || v > best.v)) best = { i, v };
+          const v = cardValue({ key: it.key }, p);
+          const score = v - it.cost * 4 + (p.hand.length < 3 ? 18 : 0);
+          if (score > 24 && (!best || score > best.score)) best = { i, score };
         }
         if (best) return { type: 'buy', index: best.i };
         return { type: 'done' };

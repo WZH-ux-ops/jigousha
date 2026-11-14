@@ -1746,8 +1746,8 @@
       </div>
       <div class="sd-sec">装 备</div>
       <div class="sd-equips">${slots.map(s => {
-        const c = eq[s];
-        const d = c ? D.CARDS[c.key] : null;
+        const key = eq[s];
+        const d = key ? D.CARDS[key] : null;
         return `<div class="sd-eq ${d ? 'has' : ''}"><span class="sd-eq-slot">${slotName[s]}</span><span class="sd-eq-name">${d ? esc(d.name) : '空'}</span></div>`;
       }).join('')}</div>
       <div class="sd-sec">技 能</div>

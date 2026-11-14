@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
  *  鸡狗杀 · 游戏引擎
  *  规则内核：回合流程 / 卡牌结算 / 技能触发 / 身份胜负
  *  浏览器与 Node 共用（服务端权威，客户端只做投影渲染）
@@ -590,6 +590,7 @@
     for (let round = 0; round < 6; round++) {
       let acted = false;
       for (const q of aliveFrom(g, user.seat)) {
+        if (q.seat === user.seat) continue; // 自己不能反调自己的牌
         if (!q.hand.some(c => c.key === 'counter')) continue;
         const r = yield* request(g, q.seat, {
           kind: 'counter', prompt: `${desc}${cancelled ? '（已被反调抵消）' : ''}，是否打出【反调】？`,

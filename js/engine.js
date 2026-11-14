@@ -52,7 +52,7 @@
         isAI: !!pl.isAI, maxHp, hp: maxHp, alive: true,
         hand: [], equips: {}, judge: [],
         revealed: pl.identity === 'producer',
-        tf: {}, pf: { oblivionis: false }
+        picks: 8, tf: {}, pf: { oblivionis: false }
       };
     });
 
@@ -547,6 +547,15 @@
       }
       case 'thunder':
         return others.length ? others.map(q => q.seat) : null;
+      case 'pick_rain': case 'pick_salvage':
+        return [];
+      case 'pick_trade':
+        return (p.picks || 0) >= 2 ? [] : null;
+      case 'pick_storm': {
+        if ((p.picks || 0) < 2) return null;
+        const arr = others.map(q => q.seat);
+        return arr.length ? arr : null;
+      }
       case 'matcha':
         return p.hp < p.maxHp ? [] : null;
       case 'inspire': case 'camp':
@@ -671,6 +680,10 @@
       return;
     }
     yield* damage(g, user, t, dmg, null);
+    if (hasSkill(user, 'pickecho')) {
+      user.picks = (user.picks || 0) + 1;
+      log(g, `${user.name} 的【拨片回响】获得 1 点吉他拨片（${user.picks}）。`, 'muted');
+    }
     if ((equipOf(user, 'weapon') || {}).key === 'pedal' && t.alive && t.hand.length) {
       const rc = t.hand[Math.floor(Math.random() * t.hand.length)];
       t.hand.splice(t.hand.indexOf(rc), 1);
@@ -812,6 +825,37 @@
         log(g, `${p.name} 对 ${t.name} 使用了【雷鸣】。`, 'card');
         const cancelled = yield* askCounter(g, p, card, t.seat);
         if (!cancelled) yield* damage(g, p, t, t.hand.length === 0 ? 2 : 1, card);
+        break;
+      }
+      case 'pick_rain': {
+        log(g, `${p.name} 使用了【拨片雨】。`, 'card');
+        drawCards(g, p, 2);
+        p.picks = (p.picks || 0) + 2;
+        fx(g, 'trick', p.seat, '拨片');
+        break;
+      }
+      case 'pick_trade': {
+        if ((p.picks || 0) < 2) break;
+        p.picks -= 2;
+        log(g, `${p.name} 用 2 点拨片换来了 2 张牌。`, 'card');
+        drawCards(g, p, 2);
+        break;
+      }
+      case 'pick_storm': {
+        if ((p.picks || 0) < 2) break;
+        p.picks -= 2;
+        const t = g.players[targets[0]];
+        log(g, `${p.name} 消耗 2 点拨片，对 ${t.name} 发动【拨片风暴】。`, 'card');
+        const cancelled = yield* askCounter(g, p, card, t.seat);
+        if (!cancelled) yield* damage(g, p, t, 2, card);
+        break;
+      }
+      case 'pick_salvage': {
+        log(g, `${p.name} 使用了【回收】，换取 3 点拨片。`, 'card');
+        p.hp -= 1;
+        p.picks = (p.picks || 0) + 3;
+        fx(g, 'damage', p.seat, '-1');
+        if (p.hp <= 0) yield* dying(g, p, null);
         break;
       }
       case 'camp': {
@@ -1123,11 +1167,53 @@
     g.phase = '结束';
   }
 
+  /* ---------------- 吉他拨片商店 ---------------- */
+  const SHOP_POOL = ['slash', 'dodge', 'matcha', 'inspire', 'dismantle', 'duet', 'counter', 'absent', 'guitar', 'bass', 'drums', 'earpiece', 'lightstick', 'capo', 'pedal', 'tune', 'retake', 'encore', 'swap', 'thunder'];
+  const SHOP_COST = [2, 3, 4];
+  function makeShop(g, p) {
+    const pool = SHOP_POOL.slice();
+    const items = [];
+    const disc = (hasEquip(p, 'pickguitar') || hasEquip(p, 'pickbelt') || hasSkill(p, 'pickinstinct')) ? 1 : 0;
+    for (let i = 0; i < 3; i++) {
+      const idx = Math.floor(g.rng() * pool.length);
+      const key = pool.splice(idx, 1)[0];
+      if (!key) break;
+      items.push({ key, cost: Math.max(1, SHOP_COST[i] - disc) });
+    }
+    return { round: g.round, items };
+  }
+
   function* playPhase(g, p) {
+    // 拨片：初始 8 点，每轮补充 2 点
+    if (p.picks == null) p.picks = 8;
+    if (p.shopRound == null) p.shopRound = g.round;
+    else if (p.shopRound !== g.round) {
+      p.picks += 2;
+      p.shopRound = g.round;
+      log(g, `${p.name} 补充了 2 点吉他拨片（${p.picks}）。`, 'muted');
+    }
+    g.shop = g.shop || {};
+    if (!g.shop[p.seat] || g.shop[p.seat].round !== g.round) g.shop[p.seat] = makeShop(g, p);
+    if (hasEquip(p, 'pickbox')) {
+      p.picks += 1;
+      log(g, `${p.name} 的【拨片盒】提供了 1 点吉他拨片（${p.picks}）。`, 'muted');
+    }
+    if (hasSkill(p, 'pickfan')) {
+      p.picks += 1;
+      log(g, `${p.name} 的【拨片收藏】提供了 1 点吉他拨片（${p.picks}）。`, 'muted');
+    }
+
     for (;;) {
-      const ask = { kind: 'play', prompt: '出牌阶段：使用一张牌 / 发动技能 / 结束回合' };
+      const ask = { kind: 'play', prompt: '出牌阶段：使用一张牌 / 发动技能 / 购买卡牌 / 结束回合' };
       const r = yield* request(g, p.seat, ask, resp => {
         if (resp.type === 'end') return null;
+        if (resp.type === 'buy') {
+          const sh = g.shop[p.seat];
+          const it = sh && sh.items[resp.index];
+          if (!it) return '没有这个商品';
+          if (p.picks < it.cost) return '吉他拨片不够';
+          return null;
+        }
         if (resp.type === 'card') {
           const c = findInHand(p, resp.cardId);
           if (!c) return '牌不在手中';
@@ -1160,6 +1246,25 @@
         return '无效操作';
       });
       if (r.type === 'end') break;
+      if (r.type === 'buy') {
+        const sh = g.shop[p.seat];
+        const it = sh && sh.items[r.index];
+        if (it) {
+          p.picks -= it.cost;
+          const c = {
+            uid: 'c' + (++g.uid), key: it.key,
+            suit: D.SUITS[Math.floor(g.rng() * 4)],
+            rank: 1 + Math.floor(g.rng() * 13)
+          };
+          c.rankText = D.RANK_TEXT[c.rank];
+          p.hand.push(c);
+          sortHand(p);
+          sh.items[r.index] = null;
+          log(g, `${p.name} 用 ${it.cost} 点吉他拨片买下了【${D.CARDS[it.key].name}】（剩余 ${p.picks}）。`, 'card');
+          fx(g, 'trick', p.seat, '拨片');
+        }
+        continue;
+      }
       if (r.type === 'card') {
         yield* useCard(g, p, r.cardId, r.targets || []);
       } else if (r.type === 'skill') {
@@ -1236,6 +1341,9 @@
     return {
       seat, players,
       hand: me ? me.hand.map(c => ({ uid: c.uid, key: c.key, suit: c.suit, rank: c.rank, rankText: c.rankText })) : [],
+      mePicks: me ? (me.picks || 0) : 0,
+      shop: (me && g.shop && g.shop[seat] && g.shop[seat].round === g.round)
+        ? g.shop[seat].items.map((it, i) => it ? { i, key: it.key, cost: it.cost } : null).filter(Boolean) : [],
       turn: g.turn, round: g.round, phase: g.phase, current: g.current,
       deckCount: g.deck.length, discardCount: g.discard.length,
       discardTop: g.discard.length ? g.discard[g.discard.length - 1].key : null,

@@ -184,6 +184,22 @@
       key: 'thunder', name: '雷鸣', type: 'trick', icon: '⚡', color: '#ffe066',
       desc: '出牌阶段，对一名其他角色造成 1 点雷电伤害；若其没有手牌，改为 2 点。', flavor: '「空が、鳴った。」'
     },
+    pick_rain: {
+      key: 'pick_rain', name: '拨片雨', type: 'trick', icon: '❋', color: '#ffd166',
+      desc: '出牌阶段，摸 2 张牌，获得 2 点吉他拨片。', flavor: '「降ってきた。」'
+    },
+    pick_trade: {
+      key: 'pick_trade', name: '拨片交易', type: 'trick', icon: '⚖', color: '#8fd3ff',
+      desc: '出牌阶段，支付 2 点吉他拨片，摸 2 张牌。', flavor: '「等価交換。」'
+    },
+    pick_storm: {
+      key: 'pick_storm', name: '拨片风暴', type: 'trick', icon: '✷', color: '#ff6b8a',
+      desc: '出牌阶段，支付 2 点吉他拨片，对一名其他角色造成 2 点伤害。', flavor: '「弾き切る。」'
+    },
+    pick_salvage: {
+      key: 'pick_salvage', name: '回收', type: 'trick', icon: '♻', color: '#9dffc4',
+      desc: '出牌阶段，失去 1 点体力，获得 3 点吉他拨片。', flavor: '「まだ使える。」'
+    },
     bass: {
       key: 'bass', name: '贝斯', type: 'equip', sub: 'weapon', icon: '🎻', color: '#6fd3c7',
       range: 3, desc: '武器 · 攻击范围 3。你使用【微声】造成伤害后，摸一张牌。',
@@ -207,6 +223,18 @@
       key: 'pedal', name: '效果器', type: 'equip', sub: 'weapon', icon: '🎛', color: '#c9b8ff',
       range: 2, desc: '武器 · 攻击范围 2。你的【微声】造成伤害后，目标随机弃一张手牌。', flavor: '「音が、歪む。」'
     },
+    pickguitar: {
+      key: 'pickguitar', name: '拨片吉他', type: 'equip', sub: 'weapon', icon: '🎸', color: '#ffd166',
+      range: 3, desc: '武器 · 攻击范围 3。商店里的卡牌费用 -1（最低 1）。', flavor: '「この一本で、足りる。」'
+    },
+    pickbox: {
+      key: 'pickbox', name: '拨片盒', type: 'equip', sub: 'armor', icon: '📦', color: '#8fe3c0',
+      desc: '防具 · 锁定技：你的回合开始时，获得 1 点吉他拨片。', flavor: '「予備は、ある。」'
+    },
+    pickbelt: {
+      key: 'pickbelt', name: '拨片腰带', type: 'equip', sub: 'armor', icon: '🎗', color: '#ffb066',
+      desc: '防具 · 锁定技：商店里的卡牌费用 -1（最低 1）。', flavor: '「いつでも、取り出せる。」'
+    },
     lightstick: {
       key: 'lightstick', name: '应援棒', type: 'equip', sub: 'armor', icon: '🪄', color: '#ffd166',
       desc: '防具 · 锁定技：你每回合首次受到伤害时，防止此伤害，然后弃置【应援棒】。',
@@ -229,6 +257,8 @@
     ['live', 3], ['spotlight', 2], ['camp', 2], ['counter', 4], ['absent', 3],
     ['encore', 2], ['swap', 2], ['thunder', 3], ['tune', 3], ['retake', 2],
     ['capo', 2], ['pedal', 2],
+    ['pick_rain', 2], ['pick_trade', 2], ['pick_storm', 2], ['pick_salvage', 2],
+    ['pickguitar', 1], ['pickbox', 1], ['pickbelt', 1],
     ['guitar', 2], ['bass', 2], ['drums', 2], ['earpiece', 2], ['lightstick', 2],
     ['bike', 2], ['tourbus', 2]
   ];
@@ -256,7 +286,8 @@
       bio: '从英国回来的转学生。想被看见、想被喜欢，于是把「组乐队」当成了最快的捷径——结果真的留了下来。',
       skills: [
         { id: 'jikoshoukai', name: '自来熟', type: '主动技', desc: '出牌阶段限一次：令一名其他角色选择一项——交给你一张手牌，或令你摸一张牌。' },
-        { id: 'kyoei', name: '虚荣', type: '锁定技', desc: '你的手牌上限 +1。' }
+        { id: 'kyoei', name: '虚荣', type: '锁定技', desc: '你的手牌上限 +1。' },
+        { id: 'pickfan', name: '拨片收藏', type: '锁定技', desc: '你的回合开始时，获得 1 点吉他拨片。' }
       ]
     },
     {
@@ -268,7 +299,8 @@
       bio: '在 Live House 蹭吃蹭喝的野良猫。不读谱，只凭耳朵弹琴；觉得有趣就留下，觉得无聊就走。',
       skills: [
         { id: 'noraneko', name: '野良猫', type: '锁定技', desc: '你使用【微声】无距离限制。' },
-        { id: 'matcha', name: '抹茶中毒', type: '触发技', desc: '每当你使用【抹茶】回复体力后，摸一张牌。' }
+        { id: 'matcha', name: '抹茶中毒', type: '触发技', desc: '每当你使用【抹茶】回复体力后，摸一张牌。' },
+        { id: 'pickinstinct', name: '拨片直觉', type: '锁定技', desc: '商店里的卡牌费用 -1（最低 1）。' }
       ]
     },
     {
@@ -316,7 +348,8 @@
       bio: '话很少，吉他却从不迟疑。被期待压得太久之后，她体内长出了另一个会说话的人格——Mortis。',
       skills: [
         { id: 'mugon', name: '无言', type: '锁定技', desc: '你不能成为【拆台】的目标。' },
-        { id: 'jinkaku', name: '人格交替', type: '主动技', desc: '出牌阶段限一次：你可以失去 1 点体力，然后摸三张牌。' }
+        { id: 'jinkaku', name: '人格交替', type: '主动技', desc: '出牌阶段限一次：你可以失去 1 点体力，然后摸三张牌。' },
+        { id: 'pickecho', name: '拨片回响', type: '锁定技', desc: '你的【微声】造成伤害后，获得 1 点吉他拨片。' }
       ]
     },
     {
@@ -408,6 +441,13 @@
     encore: '本回合可再出1张微声',
     tune: '摸2，微声+1',
     retake: '取回微声/回避',
+    pick_rain: '摸2+2拨片',
+    pick_trade: '付2拨片摸2',
+    pick_storm: '付2拨片2伤',
+    pick_salvage: '失1血换3拨片',
+    pickguitar: '武器3，商店-1',
+    pickbox: '回合开始+1拨片',
+    pickbelt: '商店费用-1',
     swap: '随机交换手牌',
     thunder: '1雷伤，无手牌则2',
     guitar: '攻击范围4',

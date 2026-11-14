@@ -984,3 +984,28 @@ body.perf .modal, body.perf .md-panel { box-shadow: 0 10px 30px rgba(0,0,0,.6) !
 .sp-me { display: flex; align-items: center; gap: 8px; padding: 8px 10px; margin-bottom: 6px; border-radius: 10px; background: rgba(255,209,102,.08); border: 1px solid rgba(255,209,102,.22); font-size: 11px; color: var(--ink-dim); }
 .sp-me b { color: var(--gold); font-weight: 600; letter-spacing: .5px; }
 .sp-me .btn { margin-left: auto; }
+
+/* ---------------- 吉他拨片 ---------------- */
+.shop-row { margin-top: 8px; padding-top: 7px; border-top: 1px dashed var(--line); }
+.shop-head { font-size: 10px; letter-spacing: 1px; color: var(--ink-faint); margin-bottom: 5px; }
+.shop-head b { color: var(--gold); font-size: 12px; }
+.shop-list { display: flex; gap: 5px; flex-wrap: wrap; }
+.shop-item { display: flex; align-items: center; gap: 4px; padding: 3px 7px; border-radius: 8px; border: 1px solid var(--line); background: rgba(255,255,255,.05); color: var(--ink); font-size: 10px; cursor: pointer; transition: .15s; }
+.shop-item:hover { border-color: var(--gold); background: rgba(255,209,102,.12); transform: translateY(-1px); }
+.si-ico { color: var(--cc); font-size: 11px; }
+.si-cost { color: var(--gold); font-weight: 700; }
+
+/* 文字更锐利 */
+.card, .card *, .mc-name, .seat .s-name { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: geometricPrecision; }
+.card { transform: translateZ(0); }
+img { image-rendering: -webkit-optimize-contrast; }
+
+/* ---------------- 人物面板 UI 优化 ---------------- */
+.seat-inner { border-radius: 14px; }
+.seat .s-name { letter-spacing: .5px; }
+.my-card .mc-skill { border-radius: 8px; background: rgba(255,255,255,.05); border: 1px solid var(--line); padding: 2px 7px; font-size: 10px; transition: .15s; }
+.my-card .mc-skill:hover { border-color: rgba(255,209,102,.5); background: rgba(255,209,102,.1); }
+.my-card .mc-skill.on { border-color: rgba(255,61,127,.6); background: rgba(255,61,127,.14); }
+.skill-chip, .mc-skill em { font-style: normal; opacity: .75; font-size: 9px; }
+.seat .equip-slot { border-radius: 8px; transition: .15s; }
+.seat .equip-slot.has { border-color: rgba(255,209,102,.35); background: rgba(255,209,102,.06); }

@@ -1063,6 +1063,7 @@
 
     renderSeats(view);
     renderMyCard(view);
+    renderShop(view);
     renderHand(view);
     renderActions(view);
     renderPrompt(view);
@@ -1144,6 +1145,29 @@
       el.onclick = () => onSeatClick(s);
       el.onmouseenter = () => { if (can) Aim.preview(s); };
       el.onmouseleave = () => Aim.clearPreview();
+    });
+  }
+
+  /* ---------------- 吉他拨片商店 ---------------- */
+  function renderShop(view) {
+    const box = $('#my-card');
+    if (!box) return;
+    const items = view.shop || [];
+    let el = box.querySelector('.shop-row');
+    const isTurn = view.pending && view.pending.seat === view.seat && view.pending.kind === 'play';
+    if (!items.length || !isTurn) { if (el) el.remove(); return; }
+    if (!el) { el = document.createElement('div'); el.className = 'shop-row'; box.appendChild(el); }
+    el.innerHTML = `<div class="shop-head">吉他拨片 <b>${view.mePicks || 0}</b></div>
+      <div class="shop-list">${items.map(it => {
+        const d = D.CARDS[it.key];
+        return `<button class="shop-item" data-i="${it.i}" title="${esc(d.desc)}">
+          <span class="si-ico" style="--cc:${d.color}">${d.icon}</span>
+          <span class="si-name">${esc(d.name)}</span>
+          <span class="si-cost">${it.cost}</span>
+        </button>`;
+      }).join('')}</div>`;
+    el.querySelectorAll('.shop-item').forEach(b => {
+      b.addEventListener('click', () => sendAction({ type: 'buy', index: +b.dataset.i }));
     });
   }
 
@@ -1364,6 +1388,17 @@
       name = d.card.name; icon = '✦'; color = '#ffd166';
       desc = sk ? sk.desc : '发动技能';
       kindLabel = '技能';
+      // 技能粒子 + 字幕
+      if (p) {
+        const seatEl = document.querySelector(`.seat[data-seat="${d.seat}"]`) || $('.my-card');
+        if (seatEl) {
+          const r = seatEl.getBoundingClientRect();
+          JGSFx.burst(r.left + r.width / 2, r.top + r.height / 2, { color: '#ffd166', count: 16, spread: 54 });
+          JGSFx.burst(r.left + r.width / 2, r.top + r.height / 2, { color: '#fff6d8', count: 6, spread: 26, up: true });
+        }
+        if (typeof showSubtitle === 'function') showSubtitle(p.charId, { jp: `【${name}】`, cn: `${p.name} 发动了【${name}】` });
+        setTimeout(() => { try { hideSubtitle(); } catch (e) { } }, 1600);
+      }
     } else {
       const def = D.CARDS[d.card.key];
       name = def.name; icon = def.icon; color = def.color;

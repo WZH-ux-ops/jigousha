@@ -164,6 +164,16 @@
 
     // 3. 灵感
     for (const c of has('inspire')) opts.push({ w: 90, a: { type: 'card', cardId: c.uid, targets: [] } });
+
+    // 3.5 吉他拨片商店：买得起且有用就买
+    if (g.shop && g.shop[p.seat] && (p.picks || 0) > 0) {
+      g.shop[p.seat].items.forEach((it, i) => {
+        if (!it || (p.picks || 0) < it.cost) return;
+        const v = cardValue({ key: it.key }, p);
+        if (v >= 40) opts.push({ w: 48 + v / 3, a: { type: 'buy', index: i } });
+      });
+    }
+
     for (const c of has('tune')) opts.push({ w: 86, a: { type: 'card', cardId: c.uid, targets: [] } });
     if (has('retake').length && g.discard.some(c => c.key === 'slash' || c.key === 'dodge')) {
       opts.push({ w: 52, a: { type: 'card', cardId: has('retake')[0].uid, targets: [] } });

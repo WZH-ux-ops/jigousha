@@ -461,6 +461,7 @@
         return { type: 'pick', zone: 'hand' };
       }
       case 'option': {
+        if (ask.title === '替换装备') return { type: 'option', index: 0 };
         if (ask.title === '自来熟') {
           return { type: 'option', index: p.hand.length > 0 ? 0 : 1 };
         }

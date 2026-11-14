@@ -741,7 +741,19 @@
     if (def.type === 'equip') {
       const slot = def.sub;
       const old = p.equips[slot];
-      if (old) toDiscard(g, old);
+      if (old) {
+        const rr = yield* request(g, p.seat, {
+          kind: 'option', title: '替换装备',
+          prompt: `【${def.name}】会替换掉你现在装备的【${D.CARDS[old.key].name}】，要替换吗？`,
+          options: [`替换【${D.CARDS[old.key].name}】`, '取消装备']
+        }, v => (v.type === 'option' && (v.index === 0 || v.index === 1)) ? null : '请选择一项');
+        if (rr.index !== 0) {
+          toDiscard(g, card);
+          log(g, `${p.name} 放弃了装备【${def.name}】。`, 'muted');
+          return true;
+        }
+        toDiscard(g, old);
+      }
       p.equips[slot] = card;
       log(g, `${p.name} 装备了【${def.name}】${old ? '（替换了【' + D.CARDS[old.key].name + '】）' : ''}。`, 'equip');
       fx(g, 'equip', p.seat, def.name);

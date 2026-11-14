@@ -66,13 +66,9 @@
     }
     shuffle(g.deck, g.rng);
 
-    // 发牌
+    // 发牌：改为「拨片采购」——开局不摸牌，只给拨片去商店买
     for (const p of g.players) {
-      for (let k = 0; k < 4; k++) {
-        const c = g.deck.pop();
-        if (c) p.hand.push(c);
-      }
-      sortHand(p);
+      p.picks = 8;
     }
 
     log(g, '—— 演出开始 ——', 'head');
@@ -1135,8 +1131,8 @@
     g.phase = '判定';
     yield* judgePhase(g, p);
 
-    g.phase = '摸牌';
-    drawCards(g, p, 2);
+    g.phase = '采购';
+    // 摸牌阶段已被拨片商店取代：每回合刷新一次随机商品，不再自动摸牌
 
     g.phase = '出牌';
     if (p.tf.skipPlay) {
@@ -1193,7 +1189,8 @@
       log(g, `${p.name} 补充了 2 点吉他拨片（${p.picks}）。`, 'muted');
     }
     g.shop = g.shop || {};
-    if (!g.shop[p.seat] || g.shop[p.seat].round !== g.round) g.shop[p.seat] = makeShop(g, p);
+    // 每回合刷新商店（云顶之弈式）
+    g.shop[p.seat] = makeShop(g, p);
     if (hasEquip(p, 'pickbox')) {
       p.picks += 1;
       log(g, `${p.name} 的【拨片盒】提供了 1 点吉他拨片（${p.picks}）。`, 'muted');
